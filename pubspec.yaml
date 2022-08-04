@@ -3,8 +3,8 @@ description: A lightweight ORM with no code generation.
 version: 0.0.1-dev.1
 repository: https://github.com/wolfenrain/wattles
 issue_tracker: https://github.com/wolfenrain/wattles/issues
-homepage: https://wattl.es
-documentation: https://docs.wattl.es
+# homepage: https://wattl.es
+# documentation: https://docs.wattl.es
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
