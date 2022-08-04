@@ -1,31 +1,31 @@
-name: waddles
+name: wattles
 
 on:
   push:
     branches:
       - main
     paths:
-      - .github/workflows/waddles.yaml
-      - packages/waddles/**
+      - .github/workflows/wattles.yaml
+      - packages/wattles/**
 
   pull_request:
     branches:
       - main
     paths:
-      - .github/workflows/waddles.yaml
-      - packages/waddles/**
+      - .github/workflows/wattles.yaml
+      - packages/wattles/**
 
 jobs:
 
   build:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/dart_package.yml@v1
     with:
-      working_directory: packages/waddles
+      working_directory: packages/wattles
 
   pana:
     defaults:
       run:
-        working-directory: packages/waddles
+        working-directory: packages/wattles
 
     runs-on: ubuntu-latest
 
