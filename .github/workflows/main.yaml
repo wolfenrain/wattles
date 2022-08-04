@@ -10,8 +10,11 @@ on:
       - main
 
 jobs:
-  semantic_pull_request:
+  build:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
 
-  build:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/dart_package.yml@v1
+  pana:
+    runs-on: ubuntu-latest
+    steps:
+      - name: noop
+        run: echo 'noop'
