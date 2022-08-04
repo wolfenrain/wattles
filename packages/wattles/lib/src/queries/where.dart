@@ -1,11 +1,12 @@
+import 'package:equatable/equatable.dart';
 import 'package:wattles/wattles.dart';
 
 /// {@template where}
 /// A where for filtering in a [Query].
 /// {@endtemplate}
-class Where {
+class Where extends Equatable {
   /// {@macro where}
-  Where(this.property, this.operator, this.value);
+  const Where(this.property, this.operator, this.value);
 
   /// The property to filter on.
   final SchemaProperty property;
@@ -15,4 +16,8 @@ class Where {
 
   /// The value to filter by.
   final dynamic value;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [property, operator, value];
 }

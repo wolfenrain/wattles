@@ -1,9 +1,11 @@
+import 'package:equatable/equatable.dart';
+
 /// {@template schema_property}
 /// Describes a property of a schema.
 /// {@endtemplate}
-class SchemaProperty implements Exception {
+class SchemaProperty extends Equatable implements Exception {
   /// {@macro schema_property}
-  SchemaProperty(
+  const SchemaProperty(
     this.propertyName, {
     required this.fromKey,
     required this.isPrimary,
@@ -21,4 +23,7 @@ class SchemaProperty implements Exception {
 
   /// Whether the property is nullable or not.
   final bool isNullable;
+
+  @override
+  List<Object?> get props => [propertyName, fromKey, isPrimary, isNullable];
 }
