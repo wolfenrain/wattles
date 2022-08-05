@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_returning_this
+
 import 'package:wattles/wattles.dart';
 
 /// {@template where_builder}

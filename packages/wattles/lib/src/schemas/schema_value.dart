@@ -1,18 +1,25 @@
+import 'package:wattles/wattles.dart';
+
+/// {@template schema_value}
+/// Represents a value in a [SchemaInstance].
+///
+/// It keeps track of the modified state of the value.
+/// {@endtemplate}
 class SchemaValue {
-  SchemaValue(this._oldValue) : _newValue = _oldValue;
+  /// {@macro schema_value}
+  SchemaValue(this._oldValue) : value = _oldValue;
 
   dynamic _oldValue;
 
-  dynamic _newValue;
+  /// The current value of the schema value.
+  dynamic value;
 
   /// Returns true if this schema value has been modified.
-  bool get isModified => _oldValue != _newValue;
+  bool get isModified => _oldValue != value;
 
-  dynamic get value => _newValue;
-  set value(dynamic value) => _newValue = value;
-
-  void persist() => _oldValue = _newValue;
+  /// Persist the new value to the old value.
+  void persist() => _oldValue = value;
 
   @override
-  String toString() => '$value';
+  String toString() => 'SchemaValue(old: $_oldValue, new: $value)';
 }

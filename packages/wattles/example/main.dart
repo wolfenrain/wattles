@@ -1,22 +1,21 @@
-import 'dart:io';
-
 import 'todo_repository.dart';
 
 void main() async {
   final todoRepository = TodoRepository();
 
+  /// Create a fresh todo in memory.
   final firstTodo = todoRepository.create()
     ..title = 'Buy milk'
     ..isCompleted = false;
-  stdout.writeln('Created todo: $firstTodo');
 
+  /// Save the todo to the database.
   await todoRepository.save(firstTodo);
-  stdout.writeln('Saved todo: $firstTodo');
 
+  /// Change the todo and save it again.
   firstTodo.isCompleted = true;
   await todoRepository.save(firstTodo);
-  stdout.writeln('Updated todo: $firstTodo');
 
+  /// Create a query for finding todos.
   final queryBuilder = todoRepository.query()
     ..where((todo) => todo.title)
         .equals('Buy milk')
@@ -27,14 +26,15 @@ void main() async {
         .and((todo) => todo.isCompleted)
         .equals(true);
 
+  /// Get all todos that match the query.
   final foundTodos = await queryBuilder.execute();
-  stdout.writeln('Found todos: $foundTodos');
+
+  /// Loop over the found todos and change them, and save them again.
   for (final todo in foundTodos) {
     todo.isCompleted = false;
     await todoRepository.save(todo);
   }
-  stdout.writeln('Updated todos: $foundTodos');
 
-  final todo = await todoRepository.getBy((todo) => todo.title)('Buy milk');
-  stdout.writeln('Found todo by key: $todo');
+  /// Delete the first todo.
+  await todoRepository.delete(firstTodo);
 }

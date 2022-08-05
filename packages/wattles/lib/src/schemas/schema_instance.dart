@@ -1,5 +1,5 @@
-import 'package:wattles/wattles.dart';
 import 'package:wattles/src/schemas/schema_base.dart';
+import 'package:wattles/wattles.dart';
 
 /// {@template schema_instance}
 /// An instance of a schema that holds data.
@@ -14,6 +14,16 @@ mixin SchemaInstance on SchemaBase {
 
   /// Get the value of a property.
   SchemaValue? get(SchemaProperty property) {
+    final value = _data[property.fromKey];
+    if (!property.isNullable && (value == null || value.value == null)) {
+      // TODO(wolfen): better errors
+      throw Exception(
+        '''
+Property ${property.propertyName} is non nullable but is currently null.
+
+Did you forget to assign a value to it?''',
+      );
+    }
     return _data[property.fromKey];
   }
 
@@ -22,6 +32,7 @@ mixin SchemaInstance on SchemaBase {
   /// This method also validates if the value is valid for the property.
   void set(SchemaProperty property, dynamic value) {
     if (!property.isNullable && value == null) {
+      // TODO(wolfen): proper error handling.
       throw Exception('Property ${property.propertyName} is not nullable');
     }
     if (!_data.containsKey(property.fromKey)) {
@@ -37,20 +48,18 @@ mixin SchemaInstance on SchemaBase {
     if (invocation.isSetter) {
       set(property, invocation.positionalArguments[0]);
     }
-    return _data[property.fromKey]!.value;
+    return get(property)?.value;
   }
 
+  /// Create a string representation of the instance.
   String toInstanceString() {
-    final builder = StringBuffer();
-    builder.write('{');
-    for (final property in (this as Schema).properties) {
-      builder.write('${property.propertyName}: ');
-      builder.write(_data[property.fromKey]?.toString());
-      if (property != (this as Schema).properties.last) {
-        builder.write(', ');
-      }
-    }
-    builder.write('}');
-    return builder.toString();
+    return [
+      '{',
+      for (final prop in (this as Schema).properties) ...[
+        '${prop.propertyName}: ${_data[prop.fromKey]?.value.toString()}',
+        if (prop != (this as Schema).properties.last) ', ',
+      ],
+      '}'
+    ].join();
   }
 }

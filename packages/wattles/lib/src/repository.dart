@@ -1,8 +1,8 @@
 import 'package:wattles/wattles.dart';
-import 'package:wattles/src/drivers/memory_driver.dart';
 
 /// {@template repository}
-///
+/// A repository for performing actions on the database of a given [Struct]'s
+/// [Schema].
 /// {@endtemplate}
 abstract class Repository<T extends Struct> {
   /// {@macro repository}
@@ -41,7 +41,9 @@ abstract class Repository<T extends Struct> {
         _table,
         _rootSchema,
         instance,
-        query: const Query([]),
+        query: Query([
+          [Where(_primaryKey, Operator.equals, primary.value)]
+        ]),
       );
     }
 
@@ -51,6 +53,23 @@ abstract class Repository<T extends Struct> {
     }
 
     return data;
+  }
+
+  /// Delete the given data from the database.
+  Future<void> delete(T data) async {
+    final instance = data as SchemaInstance;
+    final primary = instance.get(_primaryKey);
+
+    if (primary == null) {
+      return;
+    }
+
+    await _driver.delete(
+      _table,
+      query: Query([
+        [Where(_primaryKey, Operator.equals, primary.value)]
+      ]),
+    );
   }
 
   /// Create a query builder.
@@ -89,17 +108,5 @@ abstract class Repository<T extends Struct> {
     final instance = _rootSchema.instance();
     Schema.setAll(_rootSchema, instance, data ?? {});
     return instance as T;
-  }
-}
-
-extension on SchemaValue {
-  String get toSQL {
-    if (value is String) {
-      return "'$value'";
-    } else if (value is bool) {
-      return value as bool ? '1' : '0';
-    } else {
-      return '$value';
-    }
   }
 }

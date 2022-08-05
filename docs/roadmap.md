@@ -17,8 +17,8 @@ As this package is highly experimental and new, a high-level overview of the roa
 #### Documentation 🗒️
 
 - [ ] Comprehensive Documentation for getting started with Wattles
-  - [ ] Creating a Struct
-  - [ ] Creating a Schema
+  - [x] Creating a Struct
+  - [x] Creating a Schema
   - [ ] Creating a Repository
   - [ ] Showcase using the Repository
 - [ ] Documentation Site
@@ -26,6 +26,7 @@ As this package is highly experimental and new, a high-level overview of the roa
 ### Features ✨
 
 - [x] Map a schema to a table.
+- [ ] Validating data, both incoming and outgoing
 - [ ] Support relations
   - [ ] One to one
   - [ ] Many to one

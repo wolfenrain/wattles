@@ -2,7 +2,7 @@
 import 'package:test/test.dart';
 import 'package:wattles/wattles.dart';
 
-class _TestStruct extends Struct {
+abstract class _TestStruct extends Struct {
   late int testProperty1;
 }
 

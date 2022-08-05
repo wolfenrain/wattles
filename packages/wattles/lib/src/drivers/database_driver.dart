@@ -20,7 +20,7 @@ abstract class DatabaseDriver {
   });
 
   /// Delete a row from the database.
-  Future<int> delete(String table, {required String where});
+  Future<int> delete(String table, {required Query query});
 
   /// Query the database for rows.
   Future<List<Map<String, dynamic>>> query(

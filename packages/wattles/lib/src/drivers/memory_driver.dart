@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:wattles/wattles.dart';
 
 /// {@template sql_driver}
 /// Driver for storing data in memory.
 /// {@endtemplate}
 class MemoryDriver extends DatabaseDriver {
-  final List<Map<String, dynamic>> _data = [];
+  final Map<String, List<Map<String, dynamic>>> _data = {};
 
   @override
   Future<int> insert(
@@ -14,6 +12,7 @@ class MemoryDriver extends DatabaseDriver {
     Schema rootSchema,
     SchemaInstance instance,
   ) async {
+    final collection = _data.putIfAbsent(table, () => []);
     final primaryKey = rootSchema.properties.firstWhere(isPrimary);
 
     final fields = {
@@ -21,17 +20,10 @@ class MemoryDriver extends DatabaseDriver {
         prop.fromKey: instance.get(prop)!,
     };
 
-    _logSQL(
-      '''
-INSERT INTO `$table` (${fields.keys.map((e) => '`$e`').join(', ')})
-  VALUES (${fields.values.map((e) => e.toSQL).join(', ')})
-''',
-    );
-
     final map = fields.map((key, value) => MapEntry(key, value.value));
-    _data.add(map);
+    collection.add(map);
 
-    final id = _data.length;
+    final id = collection.length;
 
     instance.set(primaryKey, id);
     return map[primaryKey.fromKey] = id;
@@ -44,36 +36,49 @@ INSERT INTO `$table` (${fields.keys.map((e) => '`$e`').join(', ')})
     SchemaInstance instance, {
     required Query query,
   }) async {
-    // TODO(wolfen): should use query.
-    final primaryKey = rootSchema.properties.firstWhere(isPrimary);
-    final primary = instance.get(primaryKey);
-    if (primary == null) {
-      // TODO(wolfen): better error
-      throw ArgumentError('primary key is null');
+    final collection = _data.putIfAbsent(table, () => []);
+
+    final records = collection.where((e) {
+      return query.wheres.any(
+        (wheres) => wheres.every((where) => where.check(e)),
+      );
+    }).toList();
+
+    if (records.isEmpty) {
+      return 0;
     }
 
     final fields = {
       for (final prop in rootSchema.properties.where(isModified(instance)))
-        '`${prop.fromKey}` = ${instance.get(prop)!.toSQL}',
+        prop.fromKey: instance.get(prop)!.value,
     };
     if (fields.isEmpty) {
       return 0;
     }
 
-    _logSQL(
-      '''
-UPDATE `$table`
-  SET ${fields.join(', ')}
-  WHERE ${primaryKey.fromKey} = ${_toSQL(primary.value)}
-''',
-    );
+    for (final record in records) {
+      record.addAll(fields);
+    }
+    return records.length;
+  }
 
-    _data.firstWhere((e) => e[primaryKey.fromKey] == primary.value).addAll({
-      for (final prop in rootSchema.properties.where(isModified(instance)))
-        prop.fromKey: instance.get(prop)!.value,
-    });
+  @override
+  Future<int> delete(String table, {required Query query}) async {
+    final collection = _data.putIfAbsent(table, () => []);
 
-    return 1;
+    final records = collection.where((e) {
+      return query.wheres.any(
+        (wheres) => wheres.every((where) => where.check(e)),
+      );
+    }).toList();
+
+    if (records.isEmpty) {
+      return 0;
+    }
+
+    records.forEach(collection.remove);
+
+    return records.length;
   }
 
   @override
@@ -82,38 +87,17 @@ UPDATE `$table`
     Schema rootSchema, {
     required Query query,
   }) async {
-    final select = rootSchema.properties.map((prop) => '`${prop.fromKey}`');
-    final wheres = query.wheres
-        .map((wheres) {
-          return wheres
-              .map(
-                (w) =>
-                    '`${w.property.fromKey}` ${w.operator.toSQL} ${_toSQL(w.value)}',
-              )
-              .join(' AND ');
-        })
-        .map((e) => '($e)')
-        .join(' OR ');
+    final collection = _data.putIfAbsent(table, () => []);
 
-    _logSQL(
-      '''
-SELECT ${select.join(', ')} 
-  FROM `$table` 
-  WHERE $wheres
-''',
-    );
+    if (query.wheres.isEmpty) {
+      return collection;
+    }
 
-    return _data.where((e) {
+    return collection.where((e) {
       return query.wheres.any(
         (wheres) => wheres.every((where) => where.check(e)),
       );
     }).toList();
-  }
-
-  @override
-  Future<int> delete(String table, {required String where}) {
-    // TODO(wolfen): implement delete
-    throw UnimplementedError();
   }
 
   /// Check if given property is a primary key.
@@ -125,32 +109,6 @@ SELECT ${select.join(', ')}
   /// Check if given property is modified.
   bool Function(SchemaProperty) isModified(SchemaInstance instance) =>
       (prop) => instance.get(prop)?.isModified ?? false;
-
-  void _logSQL(String sql) {
-    stdout.writeln('\x1b[2;30m\n$sql\x1b[0m');
-  }
-
-  String _toSQL(dynamic value) {
-    if (value is String) {
-      return "'$value'";
-    } else if (value is bool) {
-      return value ? '1' : '0';
-    } else {
-      return '$value';
-    }
-  }
-}
-
-extension on SchemaValue {
-  String get toSQL {
-    if (value is String) {
-      return "'$value'";
-    } else if (value is bool) {
-      return value as bool ? '1' : '0';
-    } else {
-      return '$value';
-    }
-  }
 }
 
 extension on Where {
@@ -159,15 +117,6 @@ extension on Where {
     switch (operator) {
       case Operator.equals:
         return dataValue == value;
-    }
-  }
-}
-
-extension on Operator {
-  String get toSQL {
-    switch (this) {
-      case Operator.equals:
-        return '=';
     }
   }
 }

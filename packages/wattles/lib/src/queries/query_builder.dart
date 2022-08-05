@@ -26,5 +26,5 @@ class QueryBuilder<T extends Struct> {
     return _executor(query);
   }
 
-  // TODO: many? one?
+  // TODO(wolfen): many? one?
 }

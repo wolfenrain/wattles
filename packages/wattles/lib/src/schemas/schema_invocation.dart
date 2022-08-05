@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 /// {@template schema_invocation}
 ///
 /// {@endtemplate}
-class SchemaInvocation implements Exception {
+class SchemaInvocation extends Equatable implements Exception {
   /// {@macro schema_invocation}
   ///
   /// Tests the given [func] and if it throws an [SchemaInvocation] it returns
@@ -11,7 +13,6 @@ class SchemaInvocation implements Exception {
     Function func, {
     List<dynamic> arguments = const [],
   }) {
-    late final SchemaInvocation invocation;
     try {
       Function.apply(func, arguments);
     } on SchemaInvocation catch (err) {
@@ -25,7 +26,7 @@ class SchemaInvocation implements Exception {
   /// {@macro schema_invocation}
   ///
   /// Construct one from a given [Invocation].
-  SchemaInvocation.fromInvocation(this.invocation);
+  const SchemaInvocation.fromInvocation(this.invocation);
 
   /// The original invocation.
   final Invocation invocation;
@@ -38,6 +39,9 @@ class SchemaInvocation implements Exception {
 
   /// The positional arguments from the [invocation].
   List<dynamic> get positionalArguments => invocation.positionalArguments;
+
+  @override
+  List<Object?> get props => [memberName, isSetter, positionalArguments];
 }
 
 final _symbolRegexp = RegExp(r'Symbol\("([a-zA-Z0-9_]+)([=]?)"\)');

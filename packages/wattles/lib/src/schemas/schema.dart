@@ -1,5 +1,5 @@
-import 'package:wattles/wattles.dart';
 import 'package:wattles/src/schemas/schema_base.dart';
+import 'package:wattles/wattles.dart';
 
 /// {@template schema}
 /// A schema represents the properties of a [Struct]. It is used to validate
@@ -17,8 +17,10 @@ abstract class Schema extends SchemaBase with SchemaInstance, SchemaQueryable {
   /// Create an instance of the [Schema].
   final Schema Function() _create;
 
+  /// Create a new instance of the [Schema]. Used for storing data locally.
   SchemaInstance instance() => _create()..isInstance = true;
 
+  /// Create a new instance of the [Schema]. Used for querying data.
   SchemaQueryable queryable() => _create()..isQueryable = true;
 
   /// The properties of the [Schema] that are mapped through [assign].
@@ -30,7 +32,6 @@ abstract class Schema extends SchemaBase with SchemaInstance, SchemaQueryable {
     T Function() key, {
     required String fromKey,
     bool isPrimary = false,
-    T Function()? defaultValue,
   }) {
     final invocation = SchemaInvocation(key);
 
@@ -44,6 +45,7 @@ abstract class Schema extends SchemaBase with SchemaInstance, SchemaQueryable {
     );
   }
 
+  /// Get the [SchemaProperty] for a given [Struct] property.
   SchemaProperty getProperty(SchemaInvocation invocation) {
     return properties.firstWhere(
       (property) => property.propertyName == invocation.memberName,

@@ -18,6 +18,5 @@ class Where extends Equatable {
   final dynamic value;
 
   @override
-  // TODO: implement props
   List<Object?> get props => [property, operator, value];
 }
