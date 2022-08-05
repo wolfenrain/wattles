@@ -9,15 +9,17 @@ abstract class Repository<T extends Struct> {
   Repository({
     required String table,
     required Schema schema,
+    DatabaseDriver? driver,
   })  : assert(schema is T, 'schema must be of type $T'),
         _table = table,
-        _rootSchema = schema;
+        _rootSchema = schema,
+        _driver = driver ?? MemoryDriver(); // TODO(wolfen): create defaults??
 
   final String _table;
 
   final Schema _rootSchema;
 
-  final DatabaseDriver _driver = MemoryDriver();
+  final DatabaseDriver _driver;
 
   SchemaProperty get _primaryKey => _rootSchema.properties.firstWhere(
         (prop) => prop.isPrimary,
