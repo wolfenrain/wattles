@@ -20,11 +20,16 @@ class QueryBuilder<T extends Struct> {
     return where;
   }
 
-  /// Execute the query.
-  Future<List<T>> execute() async {
+  /// Execute the query and get all the results.
+  Future<List<T>> getMany() async {
     final query = Query(_wheres.map((e) => e.build()).toList());
     return _executor(query);
   }
 
-  // TODO(wolfen): many? one?
+  /// Execute the query and get the first result.
+  Future<T?> getOne() async {
+    final query = Query(_wheres.map((e) => e.build()).toList(), limit: 1);
+    final results = await _executor(query);
+    return results.isEmpty ? null : results.first;
+  }
 }

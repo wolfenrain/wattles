@@ -106,7 +106,7 @@ void main() {
         final query = repository.query()
           ..where((test) => test.key).equals('test');
 
-        final result = await query.execute();
+        final result = await query.getMany();
 
         expect(result.length, equals(2));
         expect(result.first.id, equals(instance1.id));

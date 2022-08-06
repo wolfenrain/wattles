@@ -27,7 +27,7 @@ void main() async {
         .equals(true);
 
   /// Get all todos that match the query.
-  final foundTodos = await queryBuilder.execute();
+  final foundTodos = await queryBuilder.getMany();
 
   /// Loop over the found todos and change them, and save them again.
   for (final todo in foundTodos) {
