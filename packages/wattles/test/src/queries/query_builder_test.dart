@@ -57,7 +57,7 @@ void main() {
     group('getOne', () {
       test('build and execute an empty query', () async {
         final queryBuilder = QueryBuilder<_TestStruct>(schema, (query) async {
-          expect(query, equals(Query(const [])));
+          expect(query, equals(Query(const [], limit: 1)));
           return [instance];
         });
 
@@ -70,9 +70,12 @@ void main() {
           expect(
             query,
             equals(
-              Query([
-                [Where(schema.properties.first, Operator.equals, 1)]
-              ]),
+              Query(
+                [
+                  [Where(schema.properties.first, Operator.equals, 1)]
+                ],
+                limit: 1,
+              ),
             ),
           );
           return [instance];
