@@ -38,12 +38,7 @@ class MemoryDriver extends DatabaseDriver {
   }) async {
     final collection = _data.putIfAbsent(table, () => []);
 
-    final records = collection.where((e) {
-      return query.wheres.any(
-        (wheres) => wheres.every((where) => where.check(e)),
-      );
-    }).toList();
-
+    final records = _getRecords(collection, query);
     if (records.isEmpty) {
       return 0;
     }
@@ -66,12 +61,7 @@ class MemoryDriver extends DatabaseDriver {
   Future<int> delete(String table, {required Query query}) async {
     final collection = _data.putIfAbsent(table, () => []);
 
-    final records = collection.where((e) {
-      return query.wheres.any(
-        (wheres) => wheres.every((where) => where.check(e)),
-      );
-    }).toList();
-
+    final records = _getRecords(collection, query);
     if (records.isEmpty) {
       return 0;
     }
@@ -93,11 +83,7 @@ class MemoryDriver extends DatabaseDriver {
       return collection;
     }
 
-    return collection.where((e) {
-      return query.wheres.any(
-        (wheres) => wheres.every((where) => where.check(e)),
-      );
-    }).toList();
+    return _getRecords(collection, query);
   }
 
   /// Check if given property is a primary key.
@@ -109,6 +95,19 @@ class MemoryDriver extends DatabaseDriver {
   /// Check if given property is modified.
   bool Function(SchemaProperty) isModified(SchemaInstance instance) =>
       (prop) => instance.get(prop)?.isModified ?? false;
+
+  List<Map<String, dynamic>> _getRecords(
+    List<Map<String, dynamic>> collection,
+    Query query,
+  ) {
+    final records = collection.where((e) {
+      return query.wheres.any(
+        (wheres) => wheres.every((where) => where.check(e)),
+      );
+    }).toList();
+
+    return records.sublist(0, query.limit ?? records.length);
+  }
 }
 
 extension on Where {

@@ -221,6 +221,23 @@ void main() {
         expect(result[1]['id'], equals(3));
         expect(result[1]['key'], equals('some'));
       });
+
+      test('returns records that match the query with a limit', () async {
+        final result = await driver.query(
+          'test',
+          rootSchema,
+          query: Query(
+            [
+              [Where(rootSchema.properties.last, Operator.equals, 'some')]
+            ],
+            limit: 1,
+          ),
+        );
+
+        expect(result.length, equals(1));
+        expect(result[0]['id'], equals(1));
+        expect(result[0]['key'], equals('some'));
+      });
     });
   });
 }
