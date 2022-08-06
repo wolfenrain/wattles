@@ -13,6 +13,7 @@ class MemoryDriver extends DatabaseDriver {
     SchemaInstance instance,
   ) async {
     final collection = _data.putIfAbsent(table, () => []);
+    // TODO(wolfen): should be handled more properly.
     final primaryKey = rootSchema.properties.firstWhere(isPrimary);
 
     final fields = {
