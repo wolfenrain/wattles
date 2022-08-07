@@ -7,7 +7,7 @@ import 'package:wattles/wattles.dart';
 /// {@endtemplate}
 class WhereBuilder<T, V> {
   /// {@macro where_builder}
-  WhereBuilder(this._queryable, this._whereStatement);
+  WhereBuilder(this._queryable, this._keyResolver);
 
   final List<WhereBuilder<T, dynamic>> _ands = [];
 
@@ -15,7 +15,7 @@ class WhereBuilder<T, V> {
 
   final SchemaQueryable _queryable;
 
-  final V Function(T) _whereStatement;
+  final V Function(T) _keyResolver;
 
   /// Turn the where into a equal operator where statement.
   WhereBuilder<T, V> equals(V value) {
@@ -24,7 +24,7 @@ class WhereBuilder<T, V> {
       throw Exception('Where already built.');
     }
     try {
-      _whereStatement(_queryable as T);
+      _keyResolver(_queryable as T);
     } on SchemaProperty catch (e) {
       _result = Where(e, Operator.equals, value);
     }

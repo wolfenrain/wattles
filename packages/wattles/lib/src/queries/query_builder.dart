@@ -14,8 +14,8 @@ class QueryBuilder<T extends Struct> {
   final List<WhereBuilder<T, dynamic>> _wheres = [];
 
   /// Build a where statement for the query.
-  WhereBuilder<T, V> where<V>(V Function(T) whereStatement) {
-    final where = WhereBuilder(_rootSchema.queryable(), whereStatement);
+  WhereBuilder<T, V> where<V>(V Function(T) keyResolver) {
+    final where = WhereBuilder(_rootSchema.queryable(), keyResolver);
     _wheres.add(where);
     return where;
   }

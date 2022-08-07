@@ -14,10 +14,10 @@ class MemoryDriver extends DatabaseDriver {
   ) async {
     final collection = _data.putIfAbsent(table, () => []);
     // TODO(wolfen): should be handled more properly.
-    final primaryKey = rootSchema.properties.firstWhere(isPrimary);
+    final primaryKey = rootSchema.properties.firstWhere(_isPrimary);
 
     final fields = {
-      for (final prop in rootSchema.properties.where(isNotPrimary))
+      for (final prop in rootSchema.properties.where(_isNotPrimary))
         prop.fromKey: instance.get(prop)!,
     };
 
@@ -45,7 +45,7 @@ class MemoryDriver extends DatabaseDriver {
     }
 
     final fields = {
-      for (final prop in rootSchema.properties.where(isModified(instance)))
+      for (final prop in rootSchema.properties.where(_isModified(instance)))
         prop.fromKey: instance.get(prop)!.value,
     };
     if (fields.isEmpty) {
@@ -88,13 +88,13 @@ class MemoryDriver extends DatabaseDriver {
   }
 
   /// Check if given property is a primary key.
-  bool isPrimary(SchemaProperty prop) => prop.isPrimary;
+  bool _isPrimary(SchemaProperty prop) => prop.isPrimary;
 
   /// Check if given property is not a primary key.
-  bool isNotPrimary(SchemaProperty prop) => !prop.isPrimary;
+  bool _isNotPrimary(SchemaProperty prop) => !prop.isPrimary;
 
   /// Check if given property is modified.
-  bool Function(SchemaProperty) isModified(SchemaInstance instance) =>
+  bool Function(SchemaProperty) _isModified(SchemaInstance instance) =>
       (prop) => instance.get(prop)?.isModified ?? false;
 
   List<Map<String, dynamic>> _getRecords(

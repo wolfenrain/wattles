@@ -14,6 +14,6 @@ mixin SchemaQueryable on SchemaBase {
   /// Handle the [noSuchMethod] for the queryable schemas.
   dynamic noSuchQueryMethod(SchemaInvocation invocation) {
     throw (this as Schema)
-        .getProperty(invocation); // TODO(wolfen): custom exception?
+        .getProperty(invocation); // TODO(wolfen): custom exception!
   }
 }

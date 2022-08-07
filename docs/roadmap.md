@@ -33,11 +33,13 @@ As this package is highly experimental and new, a high-level overview of the roa
   - [ ] Many to one
   - [ ] One to many
   - [ ] Many to Many
-- [ ] Make the query builder more versatile
+- [ ] Make the query builder more versatile yet stricter
+  - `WhereBuilder` operator methods should return a `WhereResult` that only has an `and` method
   - Support the at least the following WHERE operators
     - [ ] Equals and not equals (`=`, `!=`)
     - [ ] Greater than and it's equals variant (`>`, `>=`)
     - [ ] Less than and it's equal variant (`<`, `<=`)
+- [ ] Add a way to stream query results: `streamQuery`
 - [x] Support in-memory driver
 - [ ] Support SQL based driver
 - [ ] Support Redis driver
