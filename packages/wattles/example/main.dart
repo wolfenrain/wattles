@@ -1,7 +1,16 @@
+import 'package:wattles/wattles.dart';
+
 import 'todo_repository.dart';
 
 void main() async {
-  final todoRepository = TodoRepository();
+  final dataSource = DataSource.initialize(
+    schemas: [
+      TodoSchema(),
+    ],
+    driver: MemoryDriver(),
+  );
+
+  final todoRepository = dataSource.getRepository<Todo>();
 
   /// Create a fresh todo in memory.
   final firstTodo = todoRepository.create()

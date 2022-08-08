@@ -12,10 +12,12 @@ import 'package:wattles/wattles.dart';
 /// either [SchemaInstance] or [SchemaQueryable].
 abstract class Schema extends SchemaBase with SchemaInstance, SchemaQueryable {
   /// {@macro schema}
-  Schema(this._create);
+  Schema(this._create, {required this.table});
 
   /// Create an instance of the [Schema].
   final Schema Function() _create;
+
+  final String table;
 
   /// Create a new instance of the [Schema]. Used for storing data locally.
   SchemaInstance instance() => _create()..isInstance = true;

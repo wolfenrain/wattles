@@ -8,14 +8,10 @@ abstract class Todo extends Struct {
   late bool isCompleted;
 }
 
-class _TodoSchema extends Schema implements Todo {
-  _TodoSchema() : super(_TodoSchema.new) {
+class TodoSchema extends Schema implements Todo {
+  TodoSchema() : super(TodoSchema.new, table: 'todos') {
     assign(() => id, fromKey: 'id', isPrimary: true);
     assign(() => title, fromKey: 'title');
     assign(() => isCompleted, fromKey: 'completed');
   }
-}
-
-class TodoRepository extends Repository<Todo> {
-  TodoRepository() : super(table: 'todos', schema: _TodoSchema());
 }

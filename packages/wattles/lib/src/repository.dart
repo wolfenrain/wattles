@@ -4,22 +4,22 @@ import 'package:wattles/wattles.dart';
 /// A repository for performing actions on the database of a given [Struct]'s
 /// [Schema].
 /// {@endtemplate}
-abstract class Repository<T extends Struct> {
+class Repository<T extends Struct> {
   /// {@macro repository}
   Repository({
-    required String table,
     required Schema schema,
-    DatabaseDriver? driver,
+    required DataSource source,
   })  : assert(schema is T, 'schema must be of type $T'),
-        _table = table,
         _rootSchema = schema,
-        _driver = driver ?? MemoryDriver(); // TODO(wolfen): create defaults??
-
-  final String _table;
+        _source = source;
 
   final Schema _rootSchema;
 
-  final DatabaseDriver _driver;
+  final DataSource _source;
+
+  DatabaseDriver get _driver => _source.driver;
+
+  String get _table => _rootSchema.table;
 
   SchemaProperty get _primaryKey => _rootSchema.properties.firstWhere(
         (prop) => prop.isPrimary,
