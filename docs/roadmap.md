@@ -6,9 +6,6 @@ As this package is highly experimental and new, a high-level overview of the roa
 
 ### Production Readiness ⚙️
 
-#### Bugs/Quality 🐛
-
-- [ ] 
 
 #### Testing 🧪
 
