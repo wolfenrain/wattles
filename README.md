@@ -11,4 +11,4 @@ Wattle(s)
 
 ---
 
-Wattle(s) is a strongly typed Dart ORM that does not require generating code to function.
+Wattle(s) is a strongly typed Dart ORM that does not require code generation.
