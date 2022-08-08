@@ -18,6 +18,10 @@ void main() {
       schema = _TestSchema();
     });
 
+    test('has the correct table', () {
+      expect(schema.table, equals('test'));
+    });
+
     test('creates an instance', () async {
       expect(schema.instance().isInstance, isTrue);
     });
