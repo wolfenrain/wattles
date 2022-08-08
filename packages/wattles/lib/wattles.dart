@@ -1,5 +1,5 @@
-/// Wattle(s) is a strongly typed Dart ORM that does not require generating code \
-/// to function.
+/// Wattle(s) is a strongly typed Dart ORM that does not require code
+/// generation.
 library wattles;
 
 export 'src/data_source.dart';
