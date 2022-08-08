@@ -45,7 +45,9 @@ Now that we have our `Struct` defined we can create a `Schema` to map the `Todo`
 // this is the schema for our Todo and by doing so everything will be strongly 
 // typed.
 class TodoSchema extends Schema implements Todo {
-  TodoSchema() : super(TodoSchema.new) {
+  // The super call receives the schema's constructor and what table will 
+  // hold the data we need.
+  TodoSchema() : super(TodoSchema.new, table: 'todos') {
     // We map each of the properties to their data representation, and we can 
     // even define extra meta data if required.
     assign(() => id, fromKey: 'id', isPrimary: true);
