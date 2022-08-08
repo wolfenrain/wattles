@@ -12,6 +12,6 @@ Wattles
 
 ---
 
-A lightweight ORM with no code generation.
+Wattles is a strongly typed Dart ORM that does not require generating code to function.
 
 🚧 Coming Soon 🚧
