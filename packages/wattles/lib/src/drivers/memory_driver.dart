@@ -117,6 +117,28 @@ extension on Where {
     switch (operator) {
       case Operator.equals:
         return dataValue == value;
+      case Operator.notEquals:
+        return dataValue != value;
+      case Operator.greaterThan:
+        if (dataValue is num && value is num) {
+          return dataValue > (value as num);
+        }
+        return false;
+      case Operator.greaterThanOrEqual:
+        if (dataValue is num && value is num) {
+          return dataValue >= (value as num);
+        }
+        return false;
+      case Operator.lessThan:
+        if (dataValue is num && value is num) {
+          return dataValue < (value as num);
+        }
+        return false;
+      case Operator.lessThanOrEqual:
+        if (dataValue is num && value is num) {
+          return dataValue <= (value as num);
+        }
+        return false;
     }
   }
 }

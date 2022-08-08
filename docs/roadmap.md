@@ -31,7 +31,7 @@ As this package is highly experimental and new, a high-level overview of the roa
   - [ ] One to many
   - [ ] Many to Many
 - [ ] Make the query builder more versatile yet stricter
-  - `WhereBuilder` operator methods should return a `WhereResult` that only has an `and` method
+  - [ ] `WhereBuilder` operator methods should return a `WhereResult` that only has an `and` method
   - Support the at least the following WHERE operators
     - [ ] Equals and not equals (`=`, `!=`)
     - [ ] Greater than and it's equals variant (`>`, `>=`)
