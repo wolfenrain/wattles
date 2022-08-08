@@ -16,9 +16,9 @@ class _TestSchema extends Schema implements _TestStruct {
 }
 
 void main() {
-  group('Repository', () {
+  group('DataStore', () {
     late _TestSchema rootSchema;
-    late Repository<_TestStruct> repository;
+    late DataStore<_TestStruct> dataStore;
     late DataSource dataSource;
 
     setUp(() {
@@ -27,11 +27,11 @@ void main() {
         schemas: [rootSchema],
         driver: MemoryDriver(),
       );
-      repository = dataSource.getRepository<_TestStruct>();
+      dataStore = dataSource.getStore<_TestStruct>();
     });
 
     test('create', () {
-      final instance = repository.create()..key = 'test';
+      final instance = dataStore.create()..key = 'test';
 
       expect(instance.id, isNull);
       expect(instance.key, equals('test'));
@@ -39,17 +39,17 @@ void main() {
 
     group('save', () {
       test('saves a new record', () async {
-        final instance = repository.create()..key = 'test';
+        final instance = dataStore.create()..key = 'test';
 
-        await repository.save(instance);
+        await dataStore.save(instance);
 
         expect(instance.id, equals(1));
       });
 
       test('saves an existing record', () async {
-        final instance = repository.create()..key = 'test';
+        final instance = dataStore.create()..key = 'test';
 
-        await repository.save(instance);
+        await dataStore.save(instance);
         instance.key = 'new key';
 
         expect(
@@ -59,7 +59,7 @@ void main() {
           isTrue,
         );
 
-        await repository.save(instance);
+        await dataStore.save(instance);
 
         expect(
           (instance as SchemaInstance)
@@ -75,22 +75,22 @@ void main() {
 
     group('delete', () {
       test('deletes a record', () async {
-        final instance = repository.create()..key = 'test';
+        final instance = dataStore.create()..key = 'test';
 
-        await repository.save(instance);
-        await repository.delete(instance);
+        await dataStore.save(instance);
+        await dataStore.delete(instance);
 
-        expect(await repository.getBy((test) => test.id)(instance.id), isNull);
+        expect(await dataStore.getBy((test) => test.id)(instance.id), isNull);
       });
     });
 
     group('getBy', () {
       test('returns a record', () async {
-        final instance = repository.create()..key = 'test';
+        final instance = dataStore.create()..key = 'test';
 
-        await repository.save(instance);
+        await dataStore.save(instance);
 
-        final result = await repository.getBy((test) => test.key)(instance.key);
+        final result = await dataStore.getBy((test) => test.key)(instance.key);
 
         expect(result?.id, equals(instance.id));
       });
@@ -98,13 +98,13 @@ void main() {
 
     group('query', () {
       test('returns a list of records', () async {
-        final instance1 = repository.create()..key = 'test';
-        final instance2 = repository.create()..key = 'test';
+        final instance1 = dataStore.create()..key = 'test';
+        final instance2 = dataStore.create()..key = 'test';
 
-        await repository.save(instance1);
-        await repository.save(instance2);
+        await dataStore.save(instance1);
+        await dataStore.save(instance2);
 
-        final query = repository.query()
+        final query = dataStore.query()
           ..where((test) => test.key).equals('test');
 
         final result = await query.getMany();

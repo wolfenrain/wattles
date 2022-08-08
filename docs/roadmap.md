@@ -13,10 +13,10 @@ As this package is highly experimental and new, a high-level overview of the roa
 #### Documentation 🗒️
 
 - [ ] Comprehensive Documentation for getting started with Wattle(s)
-  - [x] Creating a Struct
-  - [x] Creating a Schema
-  - [ ] Creating a Repository
-  - [ ] Showcase using the Repository
+  - [x] Creating a `Struct`
+  - [x] Creating a `Schema`
+  - [ ] Create a `DataSource`
+  - [ ] Showcase by getting a `DataStore` for the struct
 - [ ] Document how to write a driver implementation
 - [ ] Documentation Site
 

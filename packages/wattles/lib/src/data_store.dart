@@ -1,12 +1,12 @@
 import 'package:wattles/wattles.dart';
 
-/// {@template repository}
-/// A repository for performing actions on the database of a given [Struct]'s
-/// [Schema].
+/// {@template data_store}
+/// A data store is ued for performing actions on the database for a
+/// given [Struct] and [Schema].
 /// {@endtemplate}
-class Repository<T extends Struct> {
-  /// {@macro repository}
-  Repository({
+class DataStore<T extends Struct> {
+  /// {@macro data_store}
+  DataStore({
     required Schema schema,
     required DataSource source,
   })  : assert(schema is T, 'schema must be of type $T'),

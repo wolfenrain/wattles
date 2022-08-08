@@ -20,8 +20,8 @@ class DataSource {
   List<Schema> get schemas => UnmodifiableListView(_schemas);
   final List<Schema> _schemas;
 
-  /// Returns an repository instance for the given [Struct].
-  Repository<T> getRepository<T extends Struct>() {
+  /// Returns a [DataStore] instance for the given [Struct].
+  DataStore<T> getStore<T extends Struct>() {
     final schemas = _schemas.whereType<T>();
     if (schemas.isEmpty) {
       throw Exception('No schema found for type $T');
@@ -31,7 +31,7 @@ class DataSource {
     }
     final rootSchema = schemas.first;
 
-    return Repository<T>(
+    return DataStore<T>(
       schema: rootSchema as Schema,
       source: this,
     );

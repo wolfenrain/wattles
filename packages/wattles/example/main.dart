@@ -1,6 +1,6 @@
 import 'package:wattles/wattles.dart';
 
-import 'todo_repository.dart';
+import 'todo_schema.dart';
 
 void main() async {
   final dataSource = DataSource.initialize(
@@ -10,22 +10,22 @@ void main() async {
     driver: MemoryDriver(),
   );
 
-  final todoRepository = dataSource.getRepository<Todo>();
+  final todoStore = dataSource.getStore<Todo>();
 
   /// Create a fresh todo in memory.
-  final firstTodo = todoRepository.create()
+  final firstTodo = todoStore.create()
     ..title = 'Buy milk'
     ..isCompleted = false;
 
   /// Save the todo to the database.
-  await todoRepository.save(firstTodo);
+  await todoStore.save(firstTodo);
 
   /// Change the todo and save it again.
   firstTodo.isCompleted = true;
-  await todoRepository.save(firstTodo);
+  await todoStore.save(firstTodo);
 
   /// Create a query for finding todos.
-  final queryBuilder = todoRepository.query()
+  final queryBuilder = todoStore.query()
     ..where((todo) => todo.title)
         .equals('Buy milk')
         .and((todo) => todo.isCompleted)
@@ -41,9 +41,9 @@ void main() async {
   /// Loop over the found todos and change them, and save them again.
   for (final todo in foundTodos) {
     todo.isCompleted = false;
-    await todoRepository.save(todo);
+    await todoStore.save(todo);
   }
 
   /// Delete the first todo.
-  await todoRepository.delete(firstTodo);
+  await todoStore.delete(firstTodo);
 }

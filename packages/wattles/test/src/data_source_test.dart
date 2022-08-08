@@ -27,16 +27,16 @@ void main() {
       expect(dataSource.schemas.first, isA<_TestSchema>());
     });
 
-    group('getRepository', () {
-      test('gets a repository instance for given schema', () {
+    group('getStore', () {
+      test('gets a DataStore instance for given schema', () {
         final dataSource = DataSource.initialize(
           schemas: [_TestSchema()],
           driver: MemoryDriver(),
         );
 
-        final repository = dataSource.getRepository<_TestStruct>();
+        final store = dataSource.getStore<_TestStruct>();
 
-        expect(repository, isA<Repository<_TestStruct>>());
+        expect(store, isA<DataStore<_TestStruct>>());
       });
 
       test('throws an exception if schema is not found', () {
@@ -46,7 +46,7 @@ void main() {
         );
 
         expect(
-          () => dataSource.getRepository<_TestStruct>(),
+          () => dataSource.getStore<_TestStruct>(),
           throwsA(
             isA<Exception>().having(
               (p0) => p0.toString(),
@@ -64,7 +64,7 @@ void main() {
         );
 
         expect(
-          () => dataSource.getRepository<_TestStruct>(),
+          () => dataSource.getStore<_TestStruct>(),
           throwsA(
             isA<Exception>().having(
               (p0) => p0.toString(),
