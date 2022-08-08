@@ -1,5 +1,5 @@
 <h1 align="center">
-Wattles
+Wattle(s)
 </h1>
 
 <p align="center">
@@ -11,4 +11,4 @@ Wattles
 
 ---
 
-Wattles is a strongly typed Dart ORM that does not require generating code to function.
+Wattle(s) is a strongly typed Dart ORM that does not require generating code to function.

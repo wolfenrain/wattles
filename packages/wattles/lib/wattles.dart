@@ -1,4 +1,5 @@
-/// A ligthweight ORM with no code generation.
+/// Wattle(s) is a strongly typed Dart ORM that does not require generating code \
+/// to function.
 library wattles;
 
 export 'src/data_source.dart';

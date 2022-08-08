@@ -2,9 +2,9 @@
 
 ## Prerequisites 📝
 
-In order to use Wattles you must have the [Dart SDK][dart_installation_link] installed on your machine.
+In order to use Wattle(s) you must have the [Dart SDK][dart_installation_link] installed on your machine.
 
-> **Note**: Wattles requires Dart `">=2.17.0 <3.0.0"`
+> **Note**: Wattle(s) requires Dart `">=2.17.0 <3.0.0"`
 
 ## Installing 🧑‍💻
 
@@ -22,13 +22,13 @@ dart pub add wattles
 Lets define a Todo `Struct`:
 
 ```dart
-// By extending from Struct we tell Wattles that this class is our strongly typed interface.
+// By extending from Struct we tell Wattle(s) that this class is our strongly typed interface.
 abstract class Todo extends Struct {
   // Because id is nullable, we don't have to define it as late.
   int? id;
 
   // By defining this as a non-nullable String we ensure that this value won't 
-  // ever be null. Wattles can use this to validate incoming data from the 
+  // ever be null. Wattle(s) can use this to validate incoming data from the 
   // database!
   late String title;
 
@@ -41,7 +41,7 @@ abstract class Todo extends Struct {
 Now that we have our `Struct` defined we can create a `Schema` to map the `Todo` to the database: 
 
 ```dart
-// We extends Schema and implement our Todo struct so that Wattles knows that 
+// We extends Schema and implement our Todo struct so that Wattle(s) knows that 
 // this is the schema for our Todo and by doing so everything will be strongly 
 // typed.
 class TodoSchema extends Schema implements Todo {

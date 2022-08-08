@@ -19,8 +19,6 @@ class Repository<T extends Struct> {
 
   DatabaseDriver get _driver => _source.driver;
 
-  String get _table => _rootSchema.table;
-
   SchemaProperty get _primaryKey => _rootSchema.properties.firstWhere(
         (prop) => prop.isPrimary,
       );
@@ -37,10 +35,9 @@ class Repository<T extends Struct> {
     final primary = instance.get(_primaryKey);
 
     if (primary == null) {
-      await _driver.insert(_table, _rootSchema, instance);
+      await _driver.insert(_rootSchema, instance);
     } else {
       await _driver.update(
-        _table,
         _rootSchema,
         instance,
         query: Query([
@@ -67,7 +64,7 @@ class Repository<T extends Struct> {
     }
 
     await _driver.delete(
-      _table,
+      _rootSchema,
       query: Query([
         [Where(_primaryKey, Operator.equals, primary.value)]
       ]),
@@ -77,7 +74,7 @@ class Repository<T extends Struct> {
   /// Create a query builder.
   QueryBuilder<T> query() {
     return QueryBuilder<T>(_rootSchema, (query) async {
-      final result = await _driver.query(_table, _rootSchema, query: query);
+      final result = await _driver.query(_rootSchema, query: query);
       return result.map((e) {
         final instance = _rootSchema.instance();
         Schema.setAll(_rootSchema, instance, e);
@@ -92,7 +89,6 @@ class Repository<T extends Struct> {
 
     return (V value) async {
       final result = await _driver.query(
-        _table,
         _rootSchema,
         query: Query([
           [Where(_rootSchema.getProperty(invocation), Operator.equals, value)]

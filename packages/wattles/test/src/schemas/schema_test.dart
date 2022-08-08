@@ -7,7 +7,7 @@ abstract class _TestStruct extends Struct {
 }
 
 class _TestSchema extends Schema implements _TestStruct {
-  _TestSchema() : super(_TestSchema.new);
+  _TestSchema() : super(_TestSchema.new, table: 'test');
 }
 
 void main() {

@@ -9,24 +9,25 @@ abstract class _TestStruct extends Struct {
 }
 
 class _TestSchema extends Schema implements _TestStruct {
-  _TestSchema() : super(_TestSchema.new) {
+  _TestSchema() : super(_TestSchema.new, table: 'test') {
     assign(() => id, fromKey: 'id', isPrimary: true);
     assign(() => key, fromKey: 'key');
   }
 }
 
-class _TestRepository extends Repository<_TestStruct> {
-  _TestRepository() : super(table: 'test', schema: _TestSchema());
-}
-
 void main() {
   group('Repository', () {
     late _TestSchema rootSchema;
-    late _TestRepository repository;
+    late Repository<_TestStruct> repository;
+    late DataSource dataSource;
 
     setUp(() {
       rootSchema = _TestSchema();
-      repository = _TestRepository();
+      dataSource = DataSource.initialize(
+        schemas: [rootSchema],
+        driver: MemoryDriver(),
+      );
+      repository = dataSource.getRepository<_TestStruct>();
     });
 
     test('create', () {
