@@ -47,13 +47,7 @@ void main() {
 
         expect(
           () => dataSource.getStore<_TestStruct>(),
-          throwsA(
-            isA<Exception>().having(
-              (p0) => p0.toString(),
-              'description',
-              contains('No schema found for type _TestStruct'),
-            ),
-          ),
+          throwsA(isA<NoSchemaFoundError>()),
         );
       });
 
@@ -65,13 +59,7 @@ void main() {
 
         expect(
           () => dataSource.getStore<_TestStruct>(),
-          throwsA(
-            isA<Exception>().having(
-              (p0) => p0.toString(),
-              'description',
-              contains('Multiple schemas found for type _TestStruct'),
-            ),
-          ),
+          throwsA(isA<TooManySchemasFound>()),
         );
       });
     });

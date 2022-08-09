@@ -24,12 +24,10 @@ class DataSource {
   DataStore<T> getStore<T extends Struct>() {
     final schemas = _schemas.whereType<T>();
     if (schemas.isEmpty) {
-      // TODO(wolfen): proper errors.
-      throw Exception('No schema found for type $T');
+      throw NoSchemaFoundError<T>();
     }
     if (schemas.length > 1) {
-      // TODO(wolfen): proper errors.
-      throw Exception('Multiple schemas found for type $T');
+      throw TooManySchemasFound();
     }
     final rootSchema = schemas.first;
 
