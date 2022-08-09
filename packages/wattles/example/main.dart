@@ -1,10 +1,14 @@
 import 'package:wattles/wattles.dart';
 
+import 'schemas/category.dart';
+import 'schemas/owner.dart';
 import 'schemas/todo.dart';
 
 void main() async {
   final dataSource = DataSource.initialize(
     schemas: [
+      OwnerSchema(),
+      CategorySchema(),
       TodoSchema(),
     ],
     driver: MemoryDriver(),

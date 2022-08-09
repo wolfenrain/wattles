@@ -12,7 +12,9 @@ import 'package:wattles/wattles.dart';
 /// either [SchemaInstance] or [SchemaQueryable].
 abstract class Schema extends SchemaBase with SchemaInstance, SchemaQueryable {
   /// {@macro schema}
-  Schema(this._create, {required this.table});
+  Schema(this._create, {required this.table}) {
+    _registeredSchemas.add(this);
+  }
 
   /// Create an instance of the [Schema].
   final Schema Function() _create;
@@ -28,6 +30,8 @@ abstract class Schema extends SchemaBase with SchemaInstance, SchemaQueryable {
 
   /// The properties of the [Schema] that are mapped through [assign].
   final List<SchemaProperty> properties = [];
+
+  final Set<SchemaRelation> relations = {};
 
   /// Assign a given [Struct] property and map its attributes to what it is in
   /// the database.
@@ -46,6 +50,22 @@ abstract class Schema extends SchemaBase with SchemaInstance, SchemaQueryable {
         isNullable: '$T'.endsWith('?'),
       ),
     );
+  }
+
+  OneToOneRelation<T> oneToOne<T extends Struct>(T Function() from) {
+    return OneToOneRelation<T>(this, from);
+  }
+
+  OneToManyRelation<T> oneToMany<T extends Struct>(T Function() from) {
+    return OneToManyRelation<T>(this, from);
+  }
+
+  ManyToOneRelation<T> manyToOne<T extends Struct>(List<T> Function() from) {
+    return ManyToOneRelation<T>(this, from);
+  }
+
+  ManyToManyRelation<T> manyToMany<T extends Struct>(List<T> Function() from) {
+    return ManyToManyRelation<T>(this, from);
   }
 
   /// Get the [SchemaProperty] for a given [Struct] property.
@@ -73,6 +93,19 @@ abstract class Schema extends SchemaBase with SchemaInstance, SchemaQueryable {
       return toInstanceString();
     }
     return super.toString();
+  }
+
+  static final Set<Schema> _registeredSchemas = {};
+
+  static Schema lookup<T extends Struct>() {
+    final schemas = _registeredSchemas.whereType<T>();
+    if (schemas.isEmpty) {
+      throw Exception('No schemas found for struct $T');
+    }
+    if (schemas.length > 1) {
+      throw Exception('Too many schemas found for struct $T');
+    }
+    return schemas.first as Schema;
   }
 
   /// Validate the [data] and set it to the [instance] based on the
