@@ -27,7 +27,7 @@ class DataSource {
       throw NoSchemaFoundError<T>();
     }
     if (schemas.length > 1) {
-      throw TooManySchemasFound();
+      throw TooManySchemasFoundError();
     }
     final rootSchema = schemas.first;
 

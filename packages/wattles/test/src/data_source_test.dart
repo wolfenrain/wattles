@@ -59,7 +59,7 @@ void main() {
 
         expect(
           () => dataSource.getStore<_TestStruct>(),
-          throwsA(isA<TooManySchemasFound>()),
+          throwsA(isA<TooManySchemasFoundError>()),
         );
       });
     });
