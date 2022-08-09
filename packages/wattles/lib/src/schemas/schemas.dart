@@ -1,3 +1,4 @@
+export 'exceptions/exceptions.dart';
 export 'schema.dart';
 export 'schema_instance.dart';
 export 'schema_invocation.dart';

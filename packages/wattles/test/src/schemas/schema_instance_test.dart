@@ -9,7 +9,7 @@ abstract class _TestStruct extends Struct {
 }
 
 class _TestSchema extends Schema implements _TestStruct {
-  _TestSchema() : super(_TestSchema.new) {
+  _TestSchema() : super(_TestSchema.new, table: 'test') {
     assign(() => testProperty1, fromKey: 'test_property_1');
     assign(() => testProperty2, fromKey: 'test_property_2');
   }

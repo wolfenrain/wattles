@@ -8,11 +8,10 @@ class MemoryDriver extends DatabaseDriver {
 
   @override
   Future<int> insert(
-    String table,
     Schema rootSchema,
     SchemaInstance instance,
   ) async {
-    final collection = _data.putIfAbsent(table, () => []);
+    final collection = _data.putIfAbsent(rootSchema.table, () => []);
     // TODO(wolfen): should be handled more properly.
     final primaryKey = rootSchema.properties.firstWhere(_isPrimary);
 
@@ -32,12 +31,11 @@ class MemoryDriver extends DatabaseDriver {
 
   @override
   Future<int> update(
-    String table,
     Schema rootSchema,
     SchemaInstance instance, {
     required Query query,
   }) async {
-    final collection = _data.putIfAbsent(table, () => []);
+    final collection = _data.putIfAbsent(rootSchema.table, () => []);
 
     final records = _getRecords(collection, query);
     if (records.isEmpty) {
@@ -59,8 +57,8 @@ class MemoryDriver extends DatabaseDriver {
   }
 
   @override
-  Future<int> delete(String table, {required Query query}) async {
-    final collection = _data.putIfAbsent(table, () => []);
+  Future<int> delete(Schema rootSchema, {required Query query}) async {
+    final collection = _data.putIfAbsent(rootSchema.table, () => []);
 
     final records = _getRecords(collection, query);
     if (records.isEmpty) {
@@ -74,11 +72,10 @@ class MemoryDriver extends DatabaseDriver {
 
   @override
   Future<List<Map<String, dynamic>>> query(
-    String table,
     Schema rootSchema, {
     required Query query,
   }) async {
-    final collection = _data.putIfAbsent(table, () => []);
+    final collection = _data.putIfAbsent(rootSchema.table, () => []);
 
     if (query.wheres.isEmpty) {
       return collection;

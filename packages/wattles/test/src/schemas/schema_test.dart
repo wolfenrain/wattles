@@ -7,7 +7,7 @@ abstract class _TestStruct extends Struct {
 }
 
 class _TestSchema extends Schema implements _TestStruct {
-  _TestSchema() : super(_TestSchema.new);
+  _TestSchema() : super(_TestSchema.new, table: 'test');
 }
 
 void main() {
@@ -16,6 +16,10 @@ void main() {
 
     setUp(() {
       schema = _TestSchema();
+    });
+
+    test('has the correct table', () {
+      expect(schema.table, equals('test'));
     });
 
     test('creates an instance', () async {

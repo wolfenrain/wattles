@@ -1,11 +1,10 @@
 # Roadmap 🗺️
 
-As this package is highly experimental and new, a high-level overview of the roadmap can be useful. It will allow people to more easily track what features Wattles is getting and what their states are.
+As this package is highly experimental and new, a high-level overview of the roadmap can be useful. It will allow people to more easily track what features Wattle(s) is getting and what their states are.
 
 ## Areas of Focus 💡
 
 ### Production Readiness ⚙️
-
 
 #### Testing 🧪
 
@@ -13,11 +12,11 @@ As this package is highly experimental and new, a high-level overview of the roa
 
 #### Documentation 🗒️
 
-- [ ] Comprehensive Documentation for getting started with Wattles
-  - [x] Creating a Struct
-  - [x] Creating a Schema
-  - [ ] Creating a Repository
-  - [ ] Showcase using the Repository
+- [ ] Comprehensive Documentation for getting started with Wattle(s)
+  - [x] Creating a `Struct`
+  - [x] Creating a `Schema`
+  - [ ] Create a `DataSource`
+  - [ ] Showcase by getting a `DataStore` for the struct
 - [ ] Document how to write a driver implementation
 - [ ] Documentation Site
 

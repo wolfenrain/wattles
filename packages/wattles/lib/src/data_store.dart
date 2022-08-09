@@ -1,25 +1,23 @@
 import 'package:wattles/wattles.dart';
 
-/// {@template repository}
-/// A repository for performing actions on the database of a given [Struct]'s
-/// [Schema].
+/// {@template data_store}
+/// A data store is ued for performing actions on the database for a
+/// given [Struct] and [Schema].
 /// {@endtemplate}
-abstract class Repository<T extends Struct> {
-  /// {@macro repository}
-  Repository({
-    required String table,
+class DataStore<T extends Struct> {
+  /// {@macro data_store}
+  DataStore({
     required Schema schema,
-    DatabaseDriver? driver,
+    required DataSource source,
   })  : assert(schema is T, 'schema must be of type $T'),
-        _table = table,
         _rootSchema = schema,
-        _driver = driver ?? MemoryDriver(); // TODO(wolfen): create defaults??
-
-  final String _table;
+        _source = source;
 
   final Schema _rootSchema;
 
-  final DatabaseDriver _driver;
+  final DataSource _source;
+
+  DatabaseDriver get _driver => _source.driver;
 
   SchemaProperty get _primaryKey => _rootSchema.properties.firstWhere(
         (prop) => prop.isPrimary,
@@ -37,10 +35,9 @@ abstract class Repository<T extends Struct> {
     final primary = instance.get(_primaryKey);
 
     if (primary == null) {
-      await _driver.insert(_table, _rootSchema, instance);
+      await _driver.insert(_rootSchema, instance);
     } else {
       await _driver.update(
-        _table,
         _rootSchema,
         instance,
         query: Query([
@@ -67,7 +64,7 @@ abstract class Repository<T extends Struct> {
     }
 
     await _driver.delete(
-      _table,
+      _rootSchema,
       query: Query([
         [Where(_primaryKey, Operator.equals, primary.value)]
       ]),
@@ -77,7 +74,7 @@ abstract class Repository<T extends Struct> {
   /// Create a query builder.
   QueryBuilder<T> query() {
     return QueryBuilder<T>(_rootSchema, (query) async {
-      final result = await _driver.query(_table, _rootSchema, query: query);
+      final result = await _driver.query(_rootSchema, query: query);
       return result.map((e) {
         final instance = _rootSchema.instance();
         Schema.setAll(_rootSchema, instance, e);
@@ -92,7 +89,6 @@ abstract class Repository<T extends Struct> {
 
     return (V value) async {
       final result = await _driver.query(
-        _table,
         _rootSchema,
         query: Query([
           [Where(_rootSchema.getProperty(invocation), Operator.equals, value)]

@@ -1,5 +1,5 @@
 name: wattles
-description: Wattles is a strongly typed Dart ORM that does not require generating code to function.
+description: Wattle(s) is a strongly typed Dart ORM that does not require code generation.
 version: 0.0.1-dev.1
 repository: https://github.com/wolfenrain/wattles
 issue_tracker: https://github.com/wolfenrain/wattles/issues
