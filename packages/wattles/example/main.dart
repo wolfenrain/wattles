@@ -1,6 +1,6 @@
 import 'package:wattles/wattles.dart';
 
-import 'todo_schema.dart';
+import 'schemas/todo.dart';
 
 void main() async {
   final dataSource = DataSource.initialize(
