@@ -11,4 +11,8 @@ Wattle(s)
 
 ---
 
+> wattles • [ wot-l ] • 
+>
+> a lightweight construction material made by weaving thin branches or slats between upright stakes to form a woven lattice
+
 Wattle(s) is a strongly typed Dart ORM that does not require code generation.

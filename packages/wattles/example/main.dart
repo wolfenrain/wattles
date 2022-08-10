@@ -1,8 +1,7 @@
 import 'package:wattles/wattles.dart';
 
-import 'schemas/category.dart';
-import 'schemas/owner.dart';
-import 'schemas/todo.dart';
+import 'drivers/fake_sql_driver.dart';
+import 'schemas/schemas.dart';
 
 void main() async {
   final dataSource = DataSource.initialize(
@@ -11,7 +10,7 @@ void main() async {
       CategorySchema(),
       TodoSchema(),
     ],
-    driver: MemoryDriver(),
+    driver: FakeSqlDriver(),
   );
 
   final todoStore = dataSource.getStore<Todo>();
