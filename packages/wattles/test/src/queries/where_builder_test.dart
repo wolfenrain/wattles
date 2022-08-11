@@ -22,27 +22,78 @@ void main() {
       schema = _TestSchema();
     });
 
-    group('equals', () {
-      test('where statement can be created', () {
-        final whereBuilder = WhereBuilder<_TestStruct, int>(
-          schema.queryable(),
-          (test) => test.testProperty1,
-        ).equals(1);
+    test('equals where statement', () {
+      final whereResult = WhereBuilder<_TestStruct, int>(
+        schema.queryable(),
+        (test) => test.testProperty1,
+      ).equals(1);
 
-        expect(
-          whereBuilder.build(),
-          equals([Where(schema.properties.first, Operator.equals, 1)]),
-        );
-      });
+      expect(
+        whereResult.build(),
+        equals([Where(schema.properties.first, Operator.equals, 1)]),
+      );
+    });
 
-      test('fails if a previous operator was used', () {
-        final whereBuilder = WhereBuilder<_TestStruct, int>(
-          schema.queryable(),
-          (test) => test.testProperty1,
-        ).equals(1);
+    test('not equals where statement', () {
+      final whereResult = WhereBuilder<_TestStruct, int>(
+        schema.queryable(),
+        (test) => test.testProperty1,
+      ).notEquals(1);
 
-        expectLater(() => whereBuilder.equals(1), throwsException);
-      });
+      expect(
+        whereResult.build(),
+        equals([Where(schema.properties.first, Operator.notEquals, 1)]),
+      );
+    });
+
+    test('greater than where statement', () {
+      final whereResult = WhereBuilder<_TestStruct, int>(
+        schema.queryable(),
+        (test) => test.testProperty1,
+      ).greaterThan(1);
+
+      expect(
+        whereResult.build(),
+        equals([Where(schema.properties.first, Operator.greaterThan, 1)]),
+      );
+    });
+
+    test('greater than or equal where statement', () {
+      final whereResult = WhereBuilder<_TestStruct, int>(
+        schema.queryable(),
+        (test) => test.testProperty1,
+      ).greaterThanOrEqual(1);
+
+      expect(
+        whereResult.build(),
+        equals(
+          [Where(schema.properties.first, Operator.greaterThanOrEqual, 1)],
+        ),
+      );
+    });
+
+    test('less than where statement', () {
+      final whereResult = WhereBuilder<_TestStruct, int>(
+        schema.queryable(),
+        (test) => test.testProperty1,
+      ).lessThan(1);
+
+      expect(
+        whereResult.build(),
+        equals([Where(schema.properties.first, Operator.lessThan, 1)]),
+      );
+    });
+
+    test('less than or equal where statement', () {
+      final whereResult = WhereBuilder<_TestStruct, int>(
+        schema.queryable(),
+        (test) => test.testProperty1,
+      ).lessThanOrEqual(1);
+
+      expect(
+        whereResult.build(),
+        equals([Where(schema.properties.first, Operator.lessThanOrEqual, 1)]),
+      );
     });
 
     test('can chain multiple where statements', () {
@@ -63,15 +114,6 @@ void main() {
       );
 
       expect(whereBuilder, isNot(equals(secondBuilder)));
-    });
-
-    test('fails to build if no operator was used', () {
-      final whereBuilder = WhereBuilder<_TestStruct, int>(
-        schema.queryable(),
-        (test) => test.testProperty1,
-      );
-
-      expectLater(whereBuilder.build, throwsException);
     });
   });
 }
