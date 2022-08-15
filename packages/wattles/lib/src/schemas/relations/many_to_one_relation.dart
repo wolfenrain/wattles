@@ -1,19 +1,15 @@
 import 'package:wattles/wattles.dart';
 
-class ManyToOneRelation<T extends Struct> extends Relation<List<T>> {
-  ManyToOneRelation(super.rootSchema, super.from);
+class ManyToOneRelation<T extends Struct> extends Relation<T> {
+  ManyToOneRelation(super.rootSchema, super.property);
 
-  void on<V extends Struct>(V Function(T) to) {
-    final fromProperty = rootSchema.getProperty(SchemaInvocation(from));
-
-    final otherSchema = Schema.lookup<T>();
-
-    final toProperty = rootSchema.getProperty(
-      SchemaInvocation(() => to(otherSchema as T)),
-    );
-
+  void on<V extends Struct>(List<V> Function(T) inverseSide) {
     rootSchema.relations.add(
-      SchemaRelation(fromProperty, otherSchema, toProperty),
+      SchemaRelation<T>(
+        propertyName: '',
+        inverseSide: inverseSide,
+        relationType: RelationType.manyToOne,
+      ),
     );
   }
 }

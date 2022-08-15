@@ -52,21 +52,23 @@ abstract class Schema extends SchemaBase with SchemaInstance, SchemaQueryable {
     );
   }
 
-  OneToOneRelation<T> oneToOne<T extends Struct>(T Function() from) {
-    return OneToOneRelation<T>(this, from);
+  // OneToOneRelation<T> oneToOne<T extends Struct>(T Function() from) {
+  //   return OneToOneRelation<T>(this, from);
+  // }
+
+  OneToManyRelation<T> oneToMany<T extends Struct>(
+    List<T> Function() property,
+  ) {
+    return OneToManyRelation<T>(this, property);
   }
 
-  OneToManyRelation<T> oneToMany<T extends Struct>(T Function() from) {
-    return OneToManyRelation<T>(this, from);
+  ManyToOneRelation<T> manyToOne<T extends Struct>(T Function() property) {
+    return ManyToOneRelation<T>(this, property);
   }
 
-  ManyToOneRelation<T> manyToOne<T extends Struct>(List<T> Function() from) {
-    return ManyToOneRelation<T>(this, from);
-  }
-
-  ManyToManyRelation<T> manyToMany<T extends Struct>(List<T> Function() from) {
-    return ManyToManyRelation<T>(this, from);
-  }
+  // ManyToManyRelation<T> manyToMany<T extends Struct>(List<T> Function() from) {
+  //   return ManyToManyRelation<T>(this, from);
+  // }
 
   /// Get the [SchemaProperty] for a given [Struct] property.
   SchemaProperty getProperty(SchemaInvocation invocation) {

@@ -69,18 +69,56 @@ DELETE FROM `${rootSchema.table}`
     required Query query,
   }) async {
     print('Finding items ${query.toReadable}');
-    final select = rootSchema.properties.map((prop) => '`${prop.fromKey}`');
+    final select =
+        rootSchema.properties.map((prop) => '`${prop.fromKey}`').toList();
+
+    final joins = <String>[];
+
+    for (final relation in rootSchema.relations) {
+      print(relation.relationType.name);
+      switch (relation.relationType) {
+        case RelationType.oneToMany:
+          final primaryKey = rootSchema.properties.firstWhere(isPrimary);
+          select.addAll(
+            relation.target.properties.map(
+              (prop) => '`${relation.target.table}`.`${prop.fromKey}`',
+            ),
+          );
+          joins.add(
+            '''
+  INNER JOIN `${relation.target.table}` ON `${relation.target.table}`.`${relation.propertyName}` = `${rootSchema.table}`.`${primaryKey.fromKey}`''',
+          );
+          break;
+        case RelationType.manyToOne:
+          final targetPrimaryKey =
+              relation.target.properties.firstWhere(isPrimary);
+          final primaryKey = rootSchema.properties.firstWhere(isPrimary);
+          select.addAll(
+            relation.target.properties.map(
+              (prop) => '`${relation.target.table}`.`${prop.fromKey}`',
+            ),
+          );
+          joins.add(
+            '''
+  INNER JOIN `${relation.target.table}` ON `${relation.target.table}`.`${targetPrimaryKey.fromKey}` = `${rootSchema.table}`.`${primaryKey.fromKey}`''',
+          );
+      }
+    }
 
     _logSQL(
       '''
 SELECT ${select.join(', ')} 
   FROM `${rootSchema.table}` 
+${joins.join('\n')}
   ${query.toSQL}
 ''',
     );
 
     return super.query(rootSchema, query: query);
   }
+
+  /// Check if given property is not a primary key.
+  bool isPrimary(SchemaProperty prop) => prop.isPrimary;
 
   /// Check if given property is not a primary key.
   bool isNotPrimary(SchemaProperty prop) => !prop.isPrimary;

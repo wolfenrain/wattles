@@ -4,11 +4,11 @@ import 'package:wattles/wattles.dart';
 abstract class Relation<T> {
   Relation(
     this.rootSchema,
-    this.from,
+    this.property,
   );
 
   @protected
-  final T Function() from;
+  final T Function() property;
 
   @protected
   final Schema rootSchema;

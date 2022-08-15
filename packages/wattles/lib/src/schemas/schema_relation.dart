@@ -1,15 +1,26 @@
 import 'package:equatable/equatable.dart';
 import 'package:wattles/wattles.dart';
 
-class SchemaRelation extends Equatable {
-  const SchemaRelation(this.fromProperty, this.otherSchema, this.toProperty);
+class SchemaRelation<T extends Struct> extends Equatable {
+  const SchemaRelation({
+    required this.propertyName,
+    required this.relationType,
+    required this.inverseSide,
+  });
 
-  final SchemaProperty fromProperty;
+  final String propertyName;
 
-  final Schema otherSchema;
+  final dynamic Function(T) inverseSide;
 
-  final SchemaProperty toProperty;
+  final RelationType relationType;
+
+  Schema get target => Schema.lookup<T>();
 
   @override
-  List<Object?> get props => [fromProperty, otherSchema, toProperty];
+  List<Object?> get props => [relationType, inverseSide];
+}
+
+enum RelationType {
+  oneToMany,
+  manyToOne,
 }
