@@ -1,7 +1,10 @@
 export 'exceptions/exceptions.dart';
+export 'relations/relations.dart';
 export 'schema.dart';
 export 'schema_instance.dart';
 export 'schema_invocation.dart';
 export 'schema_property.dart';
 export 'schema_queryable.dart';
+export 'schema_relation.dart';
+export 'schema_relation.dart';
 export 'schema_value.dart';
